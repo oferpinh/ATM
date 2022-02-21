@@ -1,13 +1,13 @@
 package tikal.atm.service.withdraw;
 
-import java.util.SortedMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import tikal.atm.inventory.AtmInventory;
-import tikal.atm.model.Money;
-import tikal.atm.service.MoneyCalculator;
+import tikal.atm.model.WithdrawalSet;
 
 @Service
 public class WithdrawService {
@@ -15,23 +15,33 @@ public class WithdrawService {
 	@Autowired
 	private AtmInventory atmInventory;
 	@Autowired
-	private MoneyCalculator moneyCalculator;
+	private ScipWithdrawResolver withdrawResolver;
 	@Autowired
 	private WithdrawAmountValidator amountValidator;
 	@Autowired
 	private WithdrawalSetVerifier withdrawalSetVerifier;
 	
-	public SortedMap<Money, Integer> withdraw(double requestedAmount) {
+	public WithdrawalSet withdraw(double requestedAmount) {
 		amountValidator.validateWithdrawalRequestedAmount(requestedAmount);
 		
-		SortedMap<Money, Integer> withdrawalSet = moneyCalculator.calculateWithdrawBills(requestedAmount, atmInventory.getInventory());
+			var withdrawalSet = withdrawResolver.calculateWithdrawBills(requestedAmount, atmInventory.getInventory());
+			if (withdrawalSet == null) {
+				throw new InsufficientFundsException(atmInventory.getAvailableAmount());
+			}
+			
+			withdrawalSetVerifier.verifyWithdrawalSet(withdrawalSet);
+			
+			atmInventory.withdraw(withdrawalSet);
+			
+			return withdrawalSet;
 		
-		withdrawalSetVerifier.verifyWithdrawalSet(withdrawalSet);
-		
-		atmInventory.withdraw(withdrawalSet);
-		
-		return withdrawalSet;
 	}
 
 
+	@ResponseStatus(value=HttpStatus.CONFLICT, reason="Insufficient funds")
+	 private class InsufficientFundsException extends RuntimeException {
+		 public InsufficientFundsException(double maxAmount) {
+			 super(String.format("Insufficient funds - current available amount is %1$,.2f", maxAmount));
+		 }
+	 }
 }

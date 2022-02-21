@@ -1,34 +1,27 @@
 package tikal.atm.service.withdraw;
 
-import java.util.SortedMap;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import tikal.atm.model.Money;
-import tikal.atm.model.MoneyType;
+import tikal.atm.model.WithdrawalSet;
 
 @Component
 public class WithdrawalSetVerifier{
 	
 	private static final int MAX_COINS_ALLOWED = 50;
 	
-	public void verifyWithdrawalSet(SortedMap<Money, Integer> withdrawalSet) {
-		int numOfCoins = withdrawalSet.entrySet().stream()
-			.filter(entry -> entry.getKey().getMoneyType().equals(MoneyType.COIN))
-			.map(entry -> entry.getValue())
-			.mapToInt(Integer::valueOf)
-		    .sum();
+	public void verifyWithdrawalSet(WithdrawalSet withdrawalSet) {
+		int numOfCoins = withdrawalSet.getNumOfCoins();
 		
 		if (numOfCoins > MAX_COINS_ALLOWED) {
-			throw new ExceedsAllowedCoinsException();
+			throw new TooMuchCoinsException();
 		}
 	}
 	
 	@ResponseStatus(value=HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE, reason="Coins exceeded")
-	protected class ExceedsAllowedCoinsException extends RuntimeException {
-		protected ExceedsAllowedCoinsException() {
+	protected class TooMuchCoinsException extends RuntimeException {
+		protected TooMuchCoinsException() {
 			super("Withdrawal exceeds allowed coins amount");
 		}
 	}

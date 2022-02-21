@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import tikal.atm.model.Money;
 import tikal.atm.model.MoneyComparator;
+import tikal.atm.model.WithdrawalSet;
 
 @Component
 public class AtmInventory {
@@ -40,10 +41,9 @@ public class AtmInventory {
 		inventory.put(money, availableAmount-amount);
 	}
 	
-	public void withdraw(Map<Money, Integer> map) {
-		for (var entry: map.entrySet()) {
-			withdraw(entry.getKey(), entry.getValue());
-		}
+	public void withdraw(WithdrawalSet withdrawalSet) {
+		withdrawalSet.getPieceElementList().stream()
+			.forEach(piece -> withdraw(piece.getMoney(), piece.getQuantity()));
 	}
 	
 	public void refill(Money money, int amount) {
@@ -66,7 +66,7 @@ public class AtmInventory {
 	 @ResponseStatus(value=HttpStatus.CONFLICT, reason="Insufficient funds") // 409
 	 public class InsufficientFundsException extends RuntimeException {
 		 public InsufficientFundsException(Money money) {
-			 super(String.format("Insufficient funds of type %d", money.getValue()));
+			 super(String.format("Insufficient funds of type %1$,.2f", money.getValue()));
 		 }
 	 }
 }
