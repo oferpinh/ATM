@@ -23,6 +23,7 @@ public class AdminController {
 
 	@PostMapping("/refill")
 	public ResponseEntity<Double> refill(Money money, int amount) {
+		System.out.println(String.format("Got refill request. amount: %d, type %s", amount, money.getValue()));
 		atmInventory.refill(money, amount);
 		
 		Double availableAmount = atmInventory.getAvailableAmount();

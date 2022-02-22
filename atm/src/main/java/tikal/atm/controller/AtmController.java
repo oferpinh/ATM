@@ -23,6 +23,7 @@ public class AtmController {
 	@PostMapping("withdrawal")
 	public ResponseEntity<Map<Double, Integer>> withdraw(WithdrawalApiObject withdrawalApiObject) {
 		
+		System.out.println(String.format("Got withdraw request. amount: %1$,.2f", withdrawalApiObject.getAmount()));
 		var withdrawalSet = withdrawService.withdraw(withdrawalApiObject.getAmount().doubleValue());
 		
 		return new ResponseEntity<Map<Double, Integer>>(Utils.withdrawalSetToValueMap(withdrawalSet), HttpStatus.OK);
