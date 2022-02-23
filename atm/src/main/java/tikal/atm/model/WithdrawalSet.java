@@ -19,15 +19,23 @@ public class WithdrawalSet{
 			.collect(Collectors.toList());
 	}
 	
-	public int getNumOfCoins() {
+	public int countCoins() {
+		return countPiecesOfType(MoneyType.COIN);
+	}
+
+	public int countPiecesOfType(MoneyType moneyType) {
 		return pieceElementList.stream()
-			.filter(piece -> piece.getMoney().getMoneyType().equals(MoneyType.COIN))
+			.filter(piece -> piece.getMoney().getMoneyType().equals(moneyType))
 			.map(piece -> piece.getQuantity())
 			.mapToInt(Integer::valueOf)
 		    .sum();
 	}
 	
-	public int countPieces() {
+	public int countBills() {
+		return countPiecesOfType(MoneyType.BILL);
+	}
+	
+	public int countAllPieces() {
 		return pieceElementList.stream()
 				.map(piece -> piece.getQuantity())
 				.mapToInt(Integer::valueOf)

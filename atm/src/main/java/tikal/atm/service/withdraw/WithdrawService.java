@@ -8,14 +8,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import tikal.atm.inventory.AtmInventory;
 import tikal.atm.model.WithdrawalSet;
+import tikal.atm.service.withdraw.resolver.BFWithdrawResolver;
 
 @Service
 public class WithdrawService {
 	
 	@Autowired
 	private AtmInventory atmInventory;
+//	@Autowired
+//	private ScipWithdrawResolver withdrawResolver;
 	@Autowired
-	private ScipWithdrawResolver withdrawResolver;
+	private BFWithdrawResolver withdrawResolver;
 	@Autowired
 	private WithdrawAmountValidator amountValidator;
 	@Autowired

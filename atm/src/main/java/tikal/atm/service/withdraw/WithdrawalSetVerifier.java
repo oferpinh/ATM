@@ -12,7 +12,7 @@ public class WithdrawalSetVerifier{
 	private static final int MAX_COINS_ALLOWED = 50;
 	
 	public void verifyWithdrawalSet(WithdrawalSet withdrawalSet) {
-		int numOfCoins = withdrawalSet.getNumOfCoins();
+		int numOfCoins = withdrawalSet.countCoins();
 		
 		if (numOfCoins > MAX_COINS_ALLOWED) {
 			throw new TooMuchCoinsException();

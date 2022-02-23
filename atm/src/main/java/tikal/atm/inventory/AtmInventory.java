@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import tikal.atm.model.Money;
-import tikal.atm.model.MoneyComparator;
 import tikal.atm.model.WithdrawalSet;
+import tikal.atm.service.withdraw.resolver.MoneyComparator;
 
 @Component
 public class AtmInventory {

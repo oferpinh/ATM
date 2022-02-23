@@ -35,7 +35,7 @@ public class WithdrawAmountValidator {
 	@ResponseStatus(value=HttpStatus.CONFLICT, reason="Insufficient funds")
 	 protected class InsufficientFundsException extends RuntimeException {
 		protected InsufficientFundsException(double availableAmount) {
-			 super(String.format("Insufficient funds, maximum withdrawal available is %d", availableAmount));
+			 super(String.format("Insufficient funds, maximum withdrawal available is %1$,.2f", availableAmount));
 		 }
 	 }
 	
