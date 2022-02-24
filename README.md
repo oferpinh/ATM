@@ -4,7 +4,7 @@ ATM Assignment for Tikal - Ofer Pinhas
 This is my ATM-Assignment project that was developed in Java Spring Boot.
 
 I've used swagger so it would be easier to call its APIs, and as you can see I've added a few admin api calls for monitoring the ATM's money state.
-The project is deployed on gcloud under https://atm-zvvq636fhq-uc.a.run.app/swagger-ui.html#/
+The project is deployed on gcloud under https://atm-zvvq636fhq-uc.a.run.app/swagger-ui.html
 
 I really wanted to address the bonus section and add a mysql db to the project, but unfortunately I encountered a very time consuming obstacle when trying to deploy the application in the first iteration -
 The root cause of this detour was a JNI based package (named google or-tools) for solving the withdrawal requirement, and while that made the development itself much easier, dockerizing the application as a linux machine (or a windows machine) had significant issues.
